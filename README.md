@@ -14,6 +14,10 @@ there are [plenty](https://github.com/cheongwy/node-scrypt)
 [of](https://github.com/barrysteyn/node-scrypt)
 [existing](https://github.com/hatchan/scrypt) options.
 
+This library was written in order to interoperate with
+[js-nacl](https://github.com/tonyg/js-nacl), a cryptographic toolkit
+library.
+
 ## Building the library
 
 The git checkout includes a pre-compiled version of the library, so
