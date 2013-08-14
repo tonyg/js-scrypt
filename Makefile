@@ -6,13 +6,14 @@ SCRYPTTARBALL=scrypt-$(SCRYPTVERSION).tgz
 PYTHON=python
 EMCC=`which emcc`
 
+## Builds well with emscripten of August 8, 2013 or newer and Clang/LLVM 3.2.
 all: browser
 
 $(SCRYPTRAW): $(SCRYPTUNPACKED)
 	$(PYTHON) $(EMCC) \
 		-s LINKABLE=1 \
 		-s EXPORTED_FUNCTIONS="['_crypto_scrypt','_malloc','_free']" \
-		-s ALLOW_MEMORY_GROWTH=1 \
+		-s TOTAL_MEMORY=33554432 \
 		-O2 -o $@ \
 		-DHAVE_CONFIG_H \
 		-I $(SCRYPTUNPACKED) \
