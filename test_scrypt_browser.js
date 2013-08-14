@@ -33,6 +33,13 @@ function from_hex(s) {
 }
 
 function do_tests() {
+    var browser =
+	navigator.userAgent.match(/Firefox\/[^ ]+/) ||
+	navigator.userAgent.match(/Chrome\/[^ ]+/) ||
+	navigator.userAgent.match(/Safari\/[^ ]+/) ||
+	["unknown/0.0"]; // perhaps it's IE. meh
+    output(browser[0]);
+
     output("Starting...");
 
     output(scrypt.to_hex(from_hex("0123456789abcdef")));
@@ -40,18 +47,23 @@ function do_tests() {
 
     function check(password, salt, n, r, p, expected_hex) {
 	var expected = from_hex(expected_hex);
-	var startTime = new Date().getTime();
-	var actual = scrypt.crypto_scrypt(scrypt.encode_utf8(password),
-					  scrypt.encode_utf8(salt),
-					  n, r, p, expected.length);
-	var stopTime = new Date().getTime();
-	output("Milliseconds for "+password+"/"+salt+"/"+n+"/"+r+"/"+p+": " +
-	       (stopTime - startTime));
-	if (scrypt.to_hex(actual) !== expected_hex) {
-	    output("FAILED");
-	    output("expected: " + expected_hex);
-	    output("actual:   " + scrypt.to_hex(actual));
+	var best_delta = 100000000;
+	var iteration;
+	for (iteration = 0; iteration < 3; iteration++) {
+	    var startTime = new Date().getTime();
+	    var actual = scrypt.crypto_scrypt(scrypt.encode_utf8(password),
+					      scrypt.encode_utf8(salt),
+					      n, r, p, expected.length);
+	    var stopTime = new Date().getTime();
+	    if (scrypt.to_hex(actual) !== expected_hex) {
+		output("FAILED");
+		output("expected: " + expected_hex);
+		output("actual:   " + scrypt.to_hex(actual));
+	    }
+	    var delta = (stopTime - startTime);
+	    if (delta < best_delta) best_delta = delta;
 	}
+	output("Milliseconds for "+password+"/"+salt+"/"+n+"/"+r+"/"+p+": " + best_delta);
     }
 
     check("", "", 16, 1, 1, "77d6576238657b203b19ca42c18a0497f16b4844e3074ae8dfdffa3fede21442fcd0069ded0948f8326a753a0fc81f17e8d3e0fb2e0d3628cf35e20c38d18906");
