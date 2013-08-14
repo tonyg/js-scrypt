@@ -10,11 +10,11 @@ EMCC=`which emcc`
 all: browser
 
 $(SCRYPTRAW): $(SCRYPTUNPACKED)
-	$(PYTHON) $(EMCC) \
+	EMCC_DEBUG=2 $(PYTHON) $(EMCC) \
 		-s LINKABLE=1 \
 		-s EXPORTED_FUNCTIONS="['_crypto_scrypt','_malloc','_free']" \
 		-s TOTAL_MEMORY=33554432 \
-		-O2 -o $@ \
+		-O2 --closure 1 -o $@ \
 		-DHAVE_CONFIG_H \
 		-I $(SCRYPTUNPACKED) \
 		-I $(SCRYPTUNPACKED)/lib/util \
