@@ -29,11 +29,21 @@ use the library in the browser.
 
 ## Using the library
 
-In the browser, include the `browser/scrypt.js` script:
+In the browser, include the `browser/scrypt.js` script, and invoke
+`scrypt_module_factory` to produce a usable `scrypt` module:
 
     <script src="browser/scrypt.js"></script>
+    <script> var scrypt = scrypt_module_factory(); </script>
     ...
     <script> alert(scrypt.to_hex(scrypt.random_bytes(16))); </script>
+
+The `scrypt_module_factory` function takes an optional argument
+specifying the total memory available for use by `scrypt()`. If
+supplied, it must be a power of two. If omitted, the default is
+33,554,432 bytes; 32 megabytes.
+
+The memory assigned to the produced `scrypt` module will not be
+released until the module is garbage collected.
 
 ## Strings vs. Binary Data
 

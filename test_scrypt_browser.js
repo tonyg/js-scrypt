@@ -40,6 +40,8 @@ function do_tests() {
 	["unknown/0.0"]; // perhaps it's IE. meh
     output(browser[0]);
 
+    var scrypt = scrypt_module_factory();
+
     output("Starting...");
 
     output(scrypt.to_hex(from_hex("0123456789abcdef")));
