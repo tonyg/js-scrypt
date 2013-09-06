@@ -10,9 +10,11 @@ and [Colin Percival's page on
 scrypt](http://www.tarsnap.com/scrypt.html).
 
 This library is intended only for use in the browser; for node.js,
-there are [plenty](https://github.com/cheongwy/node-scrypt)
-[of](https://github.com/barrysteyn/node-scrypt)
-[existing](https://github.com/hatchan/scrypt) options.
+see 
+[node-js-scrypt](https://github.com/tracker1/node-js-scrypt)
+which wraps this library and 
+[node-scrypt](https://github.com/barrysteyn/node-scrypt) 
+which wraps the native C library.
 
 This library was written in order to interoperate with
 [js-nacl](https://github.com/tonyg/js-nacl), a cryptographic toolkit
