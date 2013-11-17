@@ -1,4 +1,4 @@
-SCRYPTRAW=scrypt_raw.js
+SCRYPTRAW=src/scrypt_raw.js
 SCRYPTVERSION=1.1.6
 SCRYPTUNPACKED=scrypt-$(SCRYPTVERSION)
 SCRYPTTARBALL=scrypt-$(SCRYPTVERSION).tgz
@@ -23,13 +23,13 @@ clean:
 	rm -f $(SCRYPTRAW)
 	rm -rf browser
 
-browser: $(SCRYPTRAW) scrypt_browser_prefix.js scrypt_cooked.js scrypt_browser_suffix.js
+browser: $(SCRYPTRAW) src/scrypt_browser_prefix.js src/scrypt_cooked.js src/scrypt_browser_suffix.js
 	mkdir -p $@
 	cat \
-		scrypt_browser_prefix.js \
+		src/scrypt_browser_prefix.js \
 		$(SCRYPTRAW) \
-		scrypt_cooked.js \
-		scrypt_browser_suffix.js \
+		src/scrypt_cooked.js \
+		src/scrypt_browser_suffix.js \
 	> $@/scrypt.js
 
 veryclean: clean
