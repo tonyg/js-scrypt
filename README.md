@@ -29,18 +29,21 @@ use the library in the browser.
 
 ## Using the library
 
-In the browser, include the `browser/scrypt.js` script, and invoke
-`scrypt_module_factory` to produce a usable `scrypt` module:
+In the browser, include the `browser/scrypt-<version>.js` script:
 
-    <script src="browser/scrypt.js"></script>
-    <script> var scrypt = scrypt_module_factory(); </script>
+    <script src="browser/scrypt-0.0.1.js"></script>
     ...
-    <script> alert(scrypt.to_hex(scrypt.random_bytes(16))); </script>
+    <script> alert(window.scrypt.to_hex(scrypt.random_bytes(16))); </script>
 
-The `scrypt_module_factory` function takes an optional argument
-specifying the total memory available for use by `scrypt()`. If
-supplied, it must be a power of two. If omitted, the default is
-33,554,432 bytes; 32 megabytes.
+This will add `scrypt` to the `window` object, if that is undesired
+the script does have a [UMD](https://npmjs.org/package/umd) wrapper
+around it and will work with require.js as well as npm and browserify.
+
+If you need an instance of `scrypt` with the total memory adjusted
+from it's default use `scrypt.create(total_memory)`. The create
+method takes an optional argument specifying the total memory
+available for use by `scrypt()`. If supplied, it must be a power of
+two. If omitted, the default is 33,554,432 bytes; 32 megabytes.
 
 The memory assigned to the produced `scrypt` module will not be
 released until the module is garbage collected.
@@ -123,7 +126,7 @@ as a `Uint8Array`.
 js-scrypt is written by Tony Garnock-Jones
 <tonygarnockjones@gmail.com> and is licensed under the [2-clause BSD license](http://opensource.org/licenses/BSD-2-Clause):
 
-> Copyright &copy; 2013, Tony Garnock-Jones  
+> Copyright &copy; 2013, Tony Garnock-Jones
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without
@@ -154,7 +157,7 @@ js-scrypt is written by Tony Garnock-Jones
 js-scrypt relies on `scrypt` itself, which is written by Colin
 Percival and licensed as follows:
 
-> Copyright 2009 Colin Percival  
+> Copyright 2009 Colin Percival
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without

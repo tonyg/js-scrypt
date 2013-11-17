@@ -1,0 +1,14 @@
+
+function factory(requested_total_memory){
+  var Module = {TOTAL_MEMORY: (requested_total_memory || 33554432)};
+  var scrypt_raw = Module;
+
+  {{{ SCRYPTRAW }}}
+
+  {{{ SCRYPTCOOKED }}}
+
+  return scrypt;
+};
+
+module.exports = factory();
+module.exports.create = factory;
