@@ -137,6 +137,7 @@ function xa(a, b) {
 }
 var ma = 4, ya = {}, za = p, Aa;
 function w(a, b) {
+  if(typeof(b) === 'undefined') return true;
   a || wa("Assertion failed: " + b)
 }
 s.ccall = function(a, b, c, d) {
