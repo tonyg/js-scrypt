@@ -10233,6 +10233,12 @@ var scrypt = (function () {
 
     //---------------------------------------------------------------------------
 
+    function random_bytes(count) {
+	var bs = new Uint8Array(count);
+	window.crypto.getRandomValues(bs);
+	return bs;
+    }
+
     function crypto_scrypt(passwd, salt, n, r, p, buflen) {
 	var buf = new Target(buflen);
 	var pa = injectBytes(passwd);
@@ -10256,6 +10262,7 @@ var scrypt = (function () {
     exports.decode_latin1 = decode_latin1;
     exports.to_hex = to_hex;
 
+    exports.random_bytes = random_bytes;
     exports.crypto_scrypt = crypto_scrypt;
 
     return exports;
