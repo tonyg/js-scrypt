@@ -99,8 +99,19 @@ var scrypt = (function () {
 
     function random_bytes(count) {
 	var bs = new Uint8Array(count);
-	window.crypto.getRandomValues(bs);
-	return bs;
+	if(typeof(window.crypto) !== "undefined") {
+	    if(typeof(window.crypto.getRandomValues) !== "undefined") {
+	    	window.crypto.getRandomValues(bs);
+	    	return bs;
+	    }
+	}
+	if(typeof(window.msCrypto) !== "undefined") {
+	    if(typeof(window.msCrypto.getRandomValues) !== "undefined") {
+	    	window.msCrypto.getRandomValues(bs);
+	    	return bs;
+	    }
+	}
+	throw { message: "No suitable random number generator found!"};
     }
 
     function crypto_scrypt(passwd, salt, n, r, p, buflen) {
