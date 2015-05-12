@@ -1,0 +1,23 @@
+{
+  "name": "js-scrypt",
+  "version": "1.1.6",
+  "homepage": "https://github.com/tonyg/js-scrypt",
+  "authors": [
+    "Colin Percival",
+    "tonyg"
+  ],
+  "description": "Emscripten-compiled scrypt, a Password-Based Key Derivation Function from Colin Percival.",
+  "main": "browser/scrypt.js",
+  "keywords": [
+    "scrypt",
+    "password"
+  ],
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
