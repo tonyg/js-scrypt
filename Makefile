@@ -1,23 +1,17 @@
 SCRYPTRAW=scrypt_raw.js
-SCRYPTVERSION=1.1.6
+SCRYPTVERSION=1.2.0
 SCRYPTUNPACKED=scrypt-$(SCRYPTVERSION)
 SCRYPTTARBALL=scrypt-$(SCRYPTVERSION).tgz
 
 PYTHON=python
-EMCC=`which emcc`
+EMCC='which emcc'
 
-## Builds well with emscripten of August 8, 2013 or newer and Clang/LLVM 3.2.
+## Builds well with emscripten 1.35.0
 all: browser
 
 $(SCRYPTRAW): $(SCRYPTUNPACKED)
-	EMCC_DEBUG=2 $(PYTHON) $(EMCC) \
-		-s LINKABLE=1 \
-		-s EXPORTED_FUNCTIONS="['_crypto_scrypt','_malloc','_free']" \
-		-O2 --closure 1 -o $@ \
-		-DHAVE_CONFIG_H \
-		-I $(SCRYPTUNPACKED) \
-		-I $(SCRYPTUNPACKED)/lib/util \
-		$$(find $(SCRYPTUNPACKED)/lib/crypto -name '*.c')
+	cd $(SCRYPTUNPACKED); EMCC_DEBUG=2 $(EMCC) lib/crypto/crypto_scrypt.c lib/crypto/crypto_scrypt_smix.c lib/scryptenc/*.c lib/util/memlimit.c libcperciva/alg/sha256.c  libcperciva/util/*.c -I libcperciva/util/ -I libcperciva/alg/ -I libcperciva/cpusupport/ -I libcperciva/crypto/ -I lib/crypto -I lib/scryptenc/ -I lib/util/ -o ../scrypt_raw.js -DHAVE_CONFIG_H  --memory-init-file 0 -s LINKABLE=1 -s EXPORTED_FUNCTIONS="['_crypto_scrypt','_malloc','_free']" -I . -O3
+
 
 clean:
 	rm -f $(SCRYPTRAW)
@@ -37,7 +31,5 @@ veryclean: clean
 
 $(SCRYPTUNPACKED): $(SCRYPTTARBALL)
 	tar -zxvf $<
-	cp config.h $@
-	rm $@/lib/crypto/crypto_aesctr.*
-	rm $@/lib/crypto/crypto_scrypt-nosse.c
-	rm $@/lib/crypto/crypto_scrypt-sse.c
+	cp $@/config.h.in $@/config.h	
+	rm $@/lib/crypto/crypto_scrypt_smix_sse2.c

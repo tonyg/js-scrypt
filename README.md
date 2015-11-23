@@ -1,7 +1,7 @@
 # js-scrypt: Pure-Javascript Emscripten-compiled scrypt routine
 
 [Emscripten](https://github.com/kripken/emscripten)-compiled
-[scrypt](http://www.tarsnap.com/scrypt.html) (version 1.1.6), a
+[scrypt](http://www.tarsnap.com/scrypt.html) (version 1.2.0), a
 Password-Based Key Derivation Function from Colin Percival.
 
 For general background on what `scrypt` is, and why it's useful, see
