@@ -10,8 +10,8 @@
 #define PACKAGE "scrypt"
 #define PACKAGE_BUGREPORT ""
 #define PACKAGE_NAME "scrypt"
-#define PACKAGE_STRING "scrypt 1.1.6"
+#define PACKAGE_STRING "scrypt 1.2.0"
 #define PACKAGE_TARNAME "scrypt"
-#define PACKAGE_VERSION "1.1.6"
+#define PACKAGE_VERSION "1.2.0"
 #define STDC_HEADERS 1
-#define VERSION "1.1.6"
+#define VERSION "1.2.0"
