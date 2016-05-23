@@ -1,23 +1,33 @@
 SCRYPTRAW=scrypt_raw.js
-SCRYPTVERSION=1.1.6
+SCRYPTVERSION=1.2.0
 SCRYPTUNPACKED=scrypt-$(SCRYPTVERSION)
 SCRYPTTARBALL=scrypt-$(SCRYPTVERSION).tgz
 
-PYTHON=python
+EMCONFIGURE=`which emconfigure`
 EMCC=`which emcc`
 
-## Builds well with emscripten of August 8, 2013 or newer and Clang/LLVM 3.2.
+## Builds well with emscripten SDK 1.36.4.
 all: browser
 
-$(SCRYPTRAW): $(SCRYPTUNPACKED)
-	EMCC_DEBUG=2 $(PYTHON) $(EMCC) \
+$(SCRYPTRAW): $(SCRYPTUNPACKED)/config.h
+	EMCC_DEBUG=2 $(EMCC) \
+		-s ASSERTIONS=2 \
 		-s LINKABLE=1 \
 		-s EXPORTED_FUNCTIONS="['_crypto_scrypt','_malloc','_free']" \
-		-O2 --closure 1 -o $@ \
+		-O2 -o $@ \
 		-DHAVE_CONFIG_H \
 		-I $(SCRYPTUNPACKED) \
-		-I $(SCRYPTUNPACKED)/lib/util \
-		$$(find $(SCRYPTUNPACKED)/lib/crypto -name '*.c')
+		-I $(SCRYPTUNPACKED)/libcperciva/cpusupport \
+		-I $(SCRYPTUNPACKED)/libcperciva/alg \
+		-I $(SCRYPTUNPACKED)/libcperciva/util \
+		$$(find $(SCRYPTUNPACKED)/lib/crypto -name '*.c') \
+		$(SCRYPTUNPACKED)/libcperciva/util/insecure_memzero.c \
+		$(SCRYPTUNPACKED)/libcperciva/util/warnp.c \
+		$(SCRYPTUNPACKED)/libcperciva/alg/sha256.c
+
+$(SCRYPTUNPACKED)/config.h: $(SCRYPTUNPACKED)
+	(cd $(SCRYPTUNPACKED); $(EMCONFIGURE) ./configure)
+	touch $@
 
 clean:
 	rm -f $(SCRYPTRAW)
@@ -31,13 +41,11 @@ browser: $(SCRYPTRAW) scrypt_browser_prefix.js scrypt_cooked.js scrypt_browser_s
 		scrypt_cooked.js \
 		scrypt_browser_suffix.js \
 	> $@/scrypt.js
+	cp scrypt_raw.js.mem $@/
 
 veryclean: clean
 	rm -rf $(SCRYPTUNPACKED)
 
 $(SCRYPTUNPACKED): $(SCRYPTTARBALL)
 	tar -zxvf $<
-	cp config.h $@
-	rm $@/lib/crypto/crypto_aesctr.*
-	rm $@/lib/crypto/crypto_scrypt-nosse.c
-	rm $@/lib/crypto/crypto_scrypt-sse.c
+	rm -f $(SCRYPTUNPACKED)/lib/crypto/crypto_scrypt-ref.c

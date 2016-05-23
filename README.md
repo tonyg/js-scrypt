@@ -1,7 +1,7 @@
 # js-scrypt: Pure-Javascript Emscripten-compiled scrypt routine
 
 [Emscripten](https://github.com/kripken/emscripten)-compiled
-[scrypt](http://www.tarsnap.com/scrypt.html) (version 1.1.6), a
+[scrypt](http://www.tarsnap.com/scrypt.html) (version 1.2.0), a
 Password-Based Key Derivation Function from Colin Percival.
 
 For general background on what `scrypt` is, and why it's useful, see
@@ -18,6 +18,26 @@ This library was written in order to interoperate with
 [js-nacl](https://github.com/tonyg/js-nacl), a cryptographic toolkit
 library.
 
+## Change history
+
+v1.1.0: Based on scrypt v1.2.0. **INCOMPATIBLE API CHANGES** since
+0.5.0.
+
+The interface to `scrypt_module_factory` has changed.
+
+Previously, `scrypt_module_factory` expected one (optional) parameter,
+`requested_total_memory`, and returned the new `scrypt` module
+directly.
+
+Now, Emscripten uses an asynchronous loading technique that requires
+use of a callback. `scrypt_module_factory` now expects a callback
+which will be called with the `scrypt` module when it is ready to be
+called. The module factory returns no useful value: it is up to the
+user-supplied callback to transmit the `scrypt` module on to where it
+is needed.
+
+v0.5.0: Based on scrypt v1.1.6.
+
 ## Building the library
 
 The git checkout includes a pre-compiled version of the library, so
@@ -33,14 +53,26 @@ In the browser, include the `browser/scrypt.js` script, and invoke
 `scrypt_module_factory` to produce a usable `scrypt` module:
 
     <script src="browser/scrypt.js"></script>
-    <script> var scrypt = scrypt_module_factory(); </script>
-    ...
-    <script> alert(scrypt.to_hex(scrypt.random_bytes(16))); </script>
+    <script> scrypt_module_factory(function (scrypt) {
+      ...
+      alert(scrypt.to_hex(scrypt.random_bytes(16)));
+      ...
+    }); </script>
 
-The `scrypt_module_factory` function takes an optional argument
-specifying the total memory available for use by `scrypt()`. If
-supplied, it must be a power of two. If omitted, the default is
-33,554,432 bytes; 32 megabytes.
+Note that the file `browser/scrypt_raw.js.mem` must also be
+retrievable alongside `scrypt.js`.
+
+The `scrypt_module_factory` function takes an optional second
+argument, a dictionary specifying optional configuration values. At
+present, it supports only one configuration option: the total memory
+available for use by `scrypt()`, to be placed in a key named
+`requested_total_memory`. If supplied, `requested_total_memory` must
+be a power of two. If omitted, the default is 33,554,432 bytes; 32
+megabytes.
+
+For example:
+
+    scrypt_module_factory(on_ready, { requested_total_memory: 64 * 1048576 });
 
 The memory assigned to the produced `scrypt` module will not be
 released until the module is garbage collected.
