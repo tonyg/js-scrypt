@@ -8,8 +8,5 @@ var scrypt_module_factory = (function (on_ready, optionsOpt) {
 
   var Module = {
     TOTAL_MEMORY: (requested_total_memory || 33554432),
-    onRuntimeInitialized: function () {
-      on_ready(scrypt)
-    }
   };
   var scrypt_raw = Module;

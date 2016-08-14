@@ -20,6 +20,10 @@ library.
 
 ## Change history
 
+v1.2.0: Changed emscripten generation options: the `.js.mem` file is
+no longer required. The interface to `scrypt_module_factory` remains
+the same.
+
 v1.1.0: Based on scrypt v1.2.0. **INCOMPATIBLE API CHANGES** since
 0.5.0.
 
@@ -58,9 +62,6 @@ In the browser, include the `browser/scrypt.js` script, and invoke
       alert(scrypt.to_hex(scrypt.random_bytes(16)));
       ...
     }); </script>
-
-Note that the file `browser/scrypt_raw.js.mem` must also be
-retrievable alongside `scrypt.js`.
 
 The `scrypt_module_factory` function takes an optional second
 argument, a dictionary specifying optional configuration values. At
@@ -155,7 +156,7 @@ as a `Uint8Array`.
 js-scrypt is written by Tony Garnock-Jones
 <tonygarnockjones@gmail.com> and is licensed under the [2-clause BSD license](http://opensource.org/licenses/BSD-2-Clause):
 
-> Copyright &copy; 2013, Tony Garnock-Jones  
+> Copyright &copy; 2013&ndash;2016, Tony Garnock-Jones  
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without

@@ -14,7 +14,7 @@ $(SCRYPTRAW): $(SCRYPTUNPACKED)/config.h
 		-s ASSERTIONS=2 \
 		-s LINKABLE=1 \
 		-s EXPORTED_FUNCTIONS="['_crypto_scrypt','_malloc','_free']" \
-		-O2 -o $@ \
+		-O2 --memory-init-file 0 -o $@ \
 		-DHAVE_CONFIG_H \
 		-I $(SCRYPTUNPACKED) \
 		-I $(SCRYPTUNPACKED)/libcperciva/cpusupport \
@@ -41,7 +41,6 @@ browser: $(SCRYPTRAW) scrypt_browser_prefix.js scrypt_cooked.js scrypt_browser_s
 		scrypt_cooked.js \
 		scrypt_browser_suffix.js \
 	> $@/scrypt.js
-	cp scrypt_raw.js.mem $@/
 
 veryclean: clean
 	rm -rf $(SCRYPTUNPACKED)
