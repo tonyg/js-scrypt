@@ -4,7 +4,7 @@
   "homepage": "https://github.com/tonyg/js-scrypt",
   "authors": [
     "Colin Percival",
-    "tonyg"
+    "Tony Garnock-Jones <tonygarnockjones@gmail.com>"
   ],
   "description": "Emscripten-compiled scrypt, a Password-Based Key Derivation Function from Colin Percival.",
   "main": "browser/scrypt.js",
