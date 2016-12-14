@@ -68,12 +68,42 @@ argument, a dictionary specifying optional configuration values. At
 present, it supports only one configuration option: the total memory
 available for use by `scrypt()`, to be placed in a key named
 `requested_total_memory`. If supplied, `requested_total_memory` must
-be a power of two. If omitted, the default is 33,554,432 bytes; 32
-megabytes.
+be a power of two. It defaults to 33,554,432 (2<sup>25</sup>) bytes; 
+32 MB.
 
-For example:
+The amount of memory needed is directly proportional to the 
+[work factor `N`](#using-crypto_scrypt).  A good rule of thumb is:
 
-    scrypt_module_factory(on_ready, { requested_total_memory: 64 * 1048576 });
+    For any work factor N = 2^x, your requested memory should be 2^(x+11) bytes.
+    (Just add 11 to the exponent, if it's a power of 2).
+    Describing your memory size requirements as a function of N: 
+        mem(N) = 2^(log2(N) + 11)
+    wich can be simplified to:
+        mem(N) = 2048 * N
+
+**NOTE:** these values were found through experimenting. Chrome 
+(Linux, V. 52.0.2743.82 (64-bit)) will not allow more than 1GB and 
+Firefox (Linux, V. 50) crashed my desktop at 2GB (with 8GB RAM installed).
+
+(Practical) example: Hashing with the recommended N = 2<sup>20</sup> = 
+1048576 for file encryption, would require 2<sup>31</sup> = 2147483648 
+bytes (2GB) of memory. If N = 2<sup>14</sup> is consicered sufficient, 
+only 2<sup>25</sup> = 33554432 bytes (32MB) are required. 
+
+To enlarge the work factor without running into memory issues, 
+[this paper](https://tools.ietf.org/pdf/rfc7914.pdf) from the RFC suggests 
+increasing `p` instead of `N`:
+
+> a large value of p can be used to increase the computational cost of 
+scrypt without increasing the memory usage
+
+For general use, assuming the variable `N` holds the (highest) work factor 
+and is larger than 2<sup>14</sup> (16384), it is recommended to initialize 
+`scrypt` like this:
+
+    scrypt_module_factory(on_ready, { 
+        requested_total_memory: N * 2048
+    });
 
 The memory assigned to the produced `scrypt` module will not be
 released until the module is garbage collected.
@@ -119,7 +149,12 @@ and a salt *salt*,
    2<sup>14</sup>=16384 for interactive logins, and
    2<sup>20</sup>=1048576 for file encryption, but running in the
    browser is slow so Your Mileage Will Almost Certainly Vary.
-
+   
+   Be aware that *N* > 2<sup>14</sup> will require more memory
+   than is available by default. Refer to
+   [Using the library](#using-the-library) for an in-depth
+   tutorial on how to reserve the required ammount of memory.
+   
  - choose *r* and *p*. Good values are r=8 and p=1. See the scrypt
    paper for details on these parameters.
 
